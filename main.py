@@ -33,15 +33,12 @@ def process_queries(queries):
                 if contacts[j].number == cur_query.number:
                     contacts.pop(j)
                     break
-        elif cur_query.type == 'find':
+        else:
             response = 'not found'
             for contact in contacts:
                 if contact.number == cur_query.number:
                     response = contact.name
                     break
-            result.append(response)
-        else:
-            response = 'wrong command format'
             result.append(response)
     return result
 
