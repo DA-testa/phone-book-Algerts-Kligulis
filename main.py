@@ -1,3 +1,5 @@
+# python3
+
 class Query:
     def __init__(self, query):
         self.type = query[0]
@@ -14,18 +16,32 @@ def write_responses(result):
 
 def process_queries(queries):
     result = []
-    # Keep dictionary of all existing (i.e. not deleted yet) contacts.
-    contacts = {}
+    # Keep list of all existing (i.e. not deleted yet) contacts.
+    contacts = []
     for cur_query in queries:
         if cur_query.type == 'add':
             # if we already have contact with such number,
             # we should rewrite contact's name
-            contacts[cur_query.number] = cur_query.name
+            for contact in contacts:
+                if contact.number == cur_query.number:
+                    contact.name = cur_query.name
+                    break
+            else: # otherwise, just add it
+                contacts.append(cur_query)
         elif cur_query.type == 'del':
-            if cur_query.number in contacts:
-                del contacts[cur_query.number]
+            for j in range(len(contacts)):
+                if contacts[j].number == cur_query.number:
+                    contacts.pop(j)
+                    break
+        elif cur_query.type == 'find':
+            response = 'not found'
+            for contact in contacts:
+                if contact.number == cur_query.number:
+                    response = contact.name
+                    break
+            result.append(response)
         else:
-            response = contacts.get(cur_query.number, 'not found')
+            response = 'wrong command format'
             result.append(response)
     return result
 
